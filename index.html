@@ -65,6 +65,10 @@
                 </div>
             </div>
             <div class="flex items-center space-x-2">
+                <button id="openSettingsBtn" type="button" class="px-3 py-1.5 text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-lg transition flex items-center space-x-1">
+                    <i class="fa-solid fa-table-cells text-brand-600"></i>
+                    <span>Google Sheet Settings</span>
+                </button>
                 <button id="resetFormBtn" type="button" class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
                     <i class="fa-solid fa-rotate-left mr-1"></i> Reset Form
                 </button>
@@ -348,47 +352,49 @@
                 </button>
             </div>
 
-            <!-- Modal Content -->
-            <div class="p-6 space-y-4 text-sm text-slate-700">
-                <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-start space-x-3">
-                    <i class="fa-solid fa-circle-check text-emerald-600 text-xl mt-0.5"></i>
-                    <div>
-                        <h4 class="font-bold text-emerald-900">Submission Recorded</h4>
-                        <p class="text-xs text-emerald-700 mt-0.5" id="submissionStatusMsg">Your evaluation was transmitted directly to your instructor's system.</p>
-                    </div>
+    <!-- Google Script Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white max-w-lg w-full rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col">
+            <div class="p-5 bg-slate-900 text-white flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-sliders text-brand-400"></i>
+                    <h3 class="font-bold text-base">Google Sheet Data Connection</h3>
+                </div>
+                <button type="button" id="closeSettingsBtn" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4 text-xs text-slate-600">
+                <p>Paste your <strong>Google Apps Script Web App URL</strong> below to automatically route form submissions to your Google Sheet.</p>
+                
+                <div class="space-y-1.5">
+                    <label for="modalScriptUrlInput" class="block font-bold text-slate-800">
+                        Google Web App URL
+                    </label>
+                    <input type="url" id="modalScriptUrlInput" 
+                        placeholder="https://script.google.com/macros/library/d/1FBhtqGl__iDFRq8WY_CG1XCfL7zIahqpxZnIBepBoAVi1OKdyGnmRBwC/1"
+                        class="w-full p-2.5 rounded-xl border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-brand-500 outline-none">
                 </div>
 
-                <!-- Dynamic Sync Status Notification -->
-                <div id="sheetsSyncStatus" class="p-3 rounded-xl text-xs font-semibold flex items-center justify-between border bg-blue-50 text-blue-700 border-blue-200">
-                    <span><i class="fa-solid fa-cloud-arrow-up text-brand-600 mr-1.5"></i> Response saved securely.</span>
+                <div id="testUrlStatus" class="hidden p-3 rounded-xl border font-medium"></div>
+
+                <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-900 space-y-1">
+                    <p class="font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Deployment Checklist:</p>
+                    <ul class="list-disc list-inside space-y-0.5 text-[11px]">
+                        <li>Select <strong>Execute as: Me</strong></li>
+                        <li>Select <strong>Who has access: Anyone</strong> (Crucial!)</li>
+                        <li>Click <strong>Deploy > New deployment</strong> each time you edit Apps Script code</li>
+                    </ul>
                 </div>
-
-                <!-- Optional Student Backup Downloads -->
-                <div class="pt-2 border-t border-slate-100">
-                    <p class="text-xs text-slate-500 mb-3 font-medium">Keep a copy for your records (optional):</p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button type="button" id="downloadCsvBtn" 
-                            class="p-3 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 transition text-center space-y-1 group">
-                            <i class="fa-solid fa-file-csv text-lg text-emerald-600"></i>
-                            <div class="font-bold text-slate-800 text-xs">Download CSV</div>
-                        </button>
-
-                        <button type="button" id="copyTextBtn" 
-                            class="p-3 rounded-xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 transition text-center space-y-1 group">
-                            <i class="fa-solid fa-copy text-lg text-purple-600"></i>
-                            <div class="font-bold text-slate-800 text-xs">Copy Text Summary</div>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Hidden Summary Preview Text Box for Clipboard Copy -->
-                <textarea id="summaryTextPreview" readonly class="hidden"></textarea>
             </div>
 
-            <!-- Modal Footer -->
-            <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                <button type="button" id="finishBtn" class="px-5 py-2 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition">
-                    Done
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+                <button type="button" id="testUrlBtn" class="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 rounded-xl transition">
+                    <i class="fa-solid fa-vial text-brand-600 mr-1"></i> Test Connection
+                </button>
+                <button type="button" id="saveSettingsBtn" class="px-5 py-2 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition shadow">
+                    Save URL
                 </button>
             </div>
         </div>
@@ -398,17 +404,27 @@
         // =========================================================================
         // INSTRUCTOR CONFIGURATION: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
         // =========================================================================
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywXEinx9ZRfZxz83rqjS7RA2bGxxYH3dm-PnV3Cjct5E5_eeHi-j-U9SAih9gD6UA55w/exec";
+        const DEFAULT_GOOGLE_SCRIPT_URL = "PASTE_YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE";
+
+        function getActiveScriptUrl() {
+            const savedUrl = localStorage.getItem('evaluator_script_url');
+            if (savedUrl && savedUrl.trim().startsWith('http')) {
+                return savedUrl.trim();
+            }
+            if (DEFAULT_GOOGLE_SCRIPT_URL && DEFAULT_GOOGLE_SCRIPT_URL.startsWith('http')) {
+                return DEFAULT_GOOGLE_SCRIPT_URL.trim();
+            }
+            return '';
+        }
 
         // Initial Application State
         const state = {
             studentName: '',
-            groupMembers: ['e.g., Alex Jordan', 'e.g., Morgan Smith', 'e.g., Taylor Reed'], // Placeholder example teammates
+            groupMembers: ['e.g., Alex Jordan', 'e.g., Morgan Smith', 'e.g., Taylor Reed'],
             selfPercentage: 25,
-            memberPercentages: {} // Dynamic mapping memberName -> percentage integer
+            memberPercentages: {}
         };
 
-        // Colors assigned to team members for progress bar visualization
         const memberColors = [
             'bg-brand-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 
             'bg-rose-500', 'bg-cyan-500', 'bg-indigo-500', 'bg-teal-500'
@@ -418,6 +434,7 @@
             initializeGroupMembers();
             setupEventListeners();
             updateAllDynamicSections();
+            checkConfigStatus();
         });
 
         function setupEventListeners() {
@@ -473,57 +490,72 @@
                 document.getElementById('submissionModal').classList.add('hidden');
             });
 
+            // Settings Modal Listeners
+            const settingsModal = document.getElementById('settingsModal');
+            document.getElementById('openSettingsBtn').addEventListener('click', () => {
+                document.getElementById('modalScriptUrlInput').value = getActiveScriptUrl();
+                document.getElementById('testUrlStatus').classList.add('hidden');
+                settingsModal.classList.remove('hidden');
+            });
+            document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+                settingsModal.classList.add('hidden');
+            });
+            document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+                const newUrl = document.getElementById('modalScriptUrlInput').value.trim();
+                if (newUrl) {
+                    localStorage.setItem('evaluator_script_url', newUrl);
+                } else {
+                    localStorage.removeItem('evaluator_script_url');
+                }
+                settingsModal.classList.add('hidden');
+                checkConfigStatus();
+            });
+            document.getElementById('testUrlBtn').addEventListener('click', testScriptConnection);
+
             // Export Actions
             document.getElementById('downloadCsvBtn').addEventListener('click', downloadCSV);
             document.getElementById('copyTextBtn').addEventListener('click', copySummaryText);
         }
 
-        function initializeGroupMembers() {
-            renderGroupMemberInputs();
+        function checkConfigStatus() {
+            const url = getActiveScriptUrl();
+            const btn = document.getElementById('openSettingsBtn');
+            if (url) {
+                btn.className = "px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition flex items-center space-x-1";
+                btn.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> <span>Google Sheet Connected</span>`;
+            } else {
+                btn.className = "px-3 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition flex items-center space-x-1";
+                btn.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600"></i> <span>Set Google Sheet URL</span>`;
+            }
         }
 
-        function renderGroupMemberInputs() {
-            const container = document.getElementById('groupMembersContainer');
-            container.innerHTML = '';
+        function testScriptConnection() {
+            const url = document.getElementById('modalScriptUrlInput').value.trim();
+            const statusBox = document.getElementById('testUrlStatus');
+            statusBox.classList.remove('hidden');
 
-            state.groupMembers.forEach((member, index) => {
-                const row = document.createElement('div');
-                row.className = 'flex items-center space-x-2';
-                row.innerHTML = `
-                    <div class="relative flex-1">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs font-semibold">
-                            Member ${index + 1}:
-                        </span>
-                        <input type="text" value="${escapeHtml(member)}" data-index="${index}" required
-                            placeholder="Enter teammate's full name"
-                            class="member-input w-full pl-20 pr-4 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                    </div>
-                    ${state.groupMembers.length > 1 ? `
-                        <button type="button" class="remove-member-btn text-slate-400 hover:text-rose-500 p-2 rounded-lg transition" data-index="${index}" title="Remove member">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    ` : ''}
-                `;
-                container.appendChild(row);
-            });
+            if (!url || !url.startsWith('http')) {
+                statusBox.className = 'p-3 rounded-xl border text-xs bg-rose-50 text-rose-800 border-rose-200';
+                statusBox.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Please enter a valid URL starting with https://';
+                return;
+            }
 
-            // Add Event Listeners for Member Name Inputs
-            container.querySelectorAll('.member-input').forEach(input => {
-                input.addEventListener('input', (e) => {
-                    const idx = parseInt(e.target.getAttribute('data-index'), 10);
-                    state.groupMembers[idx] = e.target.value;
-                    updateAllDynamicSections();
-                });
-            });
+            statusBox.className = 'p-3 rounded-xl border text-xs bg-blue-50 text-blue-800 border-blue-200';
+            statusBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Testing connection to Google Apps Script...';
 
-            // Add Event Listeners for Remove Buttons
-            container.querySelectorAll('.remove-member-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const idx = parseInt(btn.getAttribute('data-index'), 10);
-                    state.groupMembers.splice(idx, 1);
-                    renderGroupMemberInputs();
-                    updateAllDynamicSections();
-                });
+            fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ test: true, timestamp: new Date().toLocaleString() })
+            })
+            .then(() => {
+                statusBox.className = 'p-3 rounded-xl border text-xs bg-emerald-50 text-emerald-800 border-emerald-200';
+                statusBox.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Connection request sent successfully! Check your Google Sheet for a test entry.';
+            })
+            .catch(err => {
+                statusBox.className = 'p-3 rounded-xl border text-xs bg-rose-50 text-rose-800 border-rose-200';
+                statusBox.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> Request failed: ${err.message}. Verify "Who has access" is set to "Anyone".`;
             });
         }
 
@@ -724,20 +756,21 @@
 
         function sendDataToGoogleSheet(data) {
             const statusDiv = document.getElementById('sheetsSyncStatus');
+            const activeUrl = getActiveScriptUrl();
 
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbywXEinx9ZRfZxz83rqjS7RA2bGxxYH3dm-PnV3Cjct5E5_eeHi-j-U9SAih9gD6UA55w/exec")) {
-                statusDiv.className = 'p-3 rounded-xl text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-between';
-                statusDiv.innerHTML = '<span><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Evaluation complete! Thank you for your feedback.</span>';
+            if (!activeUrl) {
+                statusDiv.className = 'p-3 rounded-xl text-xs bg-amber-50 text-amber-800 border border-amber-200 flex items-center justify-between';
+                statusDiv.innerHTML = '<span><i class="fa-solid fa-circle-info text-amber-600 mr-1.5"></i> Google Sheet URL not configured. Click "Google Sheet Settings" to set it up.</span>';
                 return;
             }
 
             statusDiv.className = 'p-3 rounded-xl text-xs bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-between';
             statusDiv.innerHTML = '<span><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Transmitting evaluation securely...</span>';
 
-            fetch(GOOGLE_SCRIPT_URL, {
+            fetch(activeUrl, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(data)
             })
             .then(() => {
@@ -746,8 +779,8 @@
             })
             .catch(err => {
                 console.error('Sheet post error:', err);
-                statusDiv.className = 'p-3 rounded-xl text-xs bg-amber-50 text-amber-800 border border-amber-200 flex items-center justify-between';
-                statusDiv.innerHTML = '<span><i class="fa-solid fa-circle-check text-amber-600 mr-1.5"></i> Evaluation completed! You may download a copy below.</span>';
+                statusDiv.className = 'p-3 rounded-xl text-xs bg-rose-50 text-rose-800 border border-rose-200 flex items-center justify-between';
+                statusDiv.innerHTML = '<span><i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1.5"></i> Transmission error. You may download a CSV copy below.</span>';
             });
         }
 
